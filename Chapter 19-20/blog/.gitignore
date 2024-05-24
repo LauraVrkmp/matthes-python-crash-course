@@ -1,0 +1,4 @@
+b_env/
+b_env_linux/
+__pycache__/
+*.sqlite3

@@ -48,7 +48,7 @@ def new_blog(request):
 def new_post(request, blog_id):
     """Page to create a new post."""
     blog = Blog.objects.get(id=blog_id)
-    check_blog_owner(blog, request.user)
+    check_blog_owner(request, blog)
 
     if request.method != 'POST':
         # No data submitted; create a blank form.
@@ -72,7 +72,7 @@ def edit_post(request, post_id):
     post = BlogPost.objects.get(id=post_id)
     blog = post.blog
     # Make sure the blog belongs to the current user.
-    check_blog_owner(blog, request.user)
+    check_blog_owner(request, blog)
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current entry.
@@ -87,8 +87,8 @@ def edit_post(request, post_id):
     context = {'post': post, 'blog': blog, 'form': form}
     return render(request, 'blogs/edit_post.html', context)
 
-def check_blog_owner(blog, user):
+def check_blog_owner(request, blog):
     """Make sure the currently logged-in user owns the blog that's
     being requested. Raite Http404 error if the user does not own the blog."""
-    if blog.owner != user:
+    if blog.owner != request.user:
         raise Http404

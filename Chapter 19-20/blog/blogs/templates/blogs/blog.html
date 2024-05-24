@@ -6,9 +6,11 @@
 
 {% block content %}
 
-    <p>
-        <a href="{% url 'blogs:new_post' blog.id %}">Create a new post</a>
-    </p>
+    {% if blog.owner == request.user %}
+        <p>
+            <a href="{% url 'blogs:new_post' blog.id %}">Create a new post</a>
+        </p>
+    {% endif %}
     
     {% for post in posts %}
         <div class="card mb-3">
@@ -19,10 +21,12 @@
                 <p class="card-text">{{ post.body|linebreaks }}</p>
                 <p class="text-end">{{ post.date_added|date:'M d, Y H:i' }}</p>
             </div>
-            <div class="card-footer text-muted">
-                <p class="text-end"><a href="{% url 'blogs:edit_post' post.id %}">
-                    edit post</a></p>
-            </div>
+            {% if blog.owner == request.user %}
+                <div class="card-footer text-muted">
+                    <p class="text-end"><a href="{% url 'blogs:edit_post' post.id %}">
+                        edit post</a></p>
+                </div>
+            {% endif %}
         </div>
     {% empty %}
         <p>This blog does not have any posts yet.</p>
